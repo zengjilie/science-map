@@ -2,6 +2,16 @@
 
 run `npm intstall` to install all the dependencies
 
-change `./node_modules/three/examples/jsm/controls/OrbitControls.js` import to `../../../build/three.module.js`
+change `./node_modules/three/examples/jsm/controls/OrbitControls.js`
 
-t 
+```
+import {
+	EventDispatcher,
+	MOUSE,
+	Quaternion,
+	Spherical,
+	TOUCH,
+	Vector2,
+	Vector3
+} from '../../../build/three.module.js';
+```
