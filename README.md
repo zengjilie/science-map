@@ -15,3 +15,6 @@ import {
 	Vector3
 } from '../../../build/three.module.js';
 ```
+
+## Demo
+![image](/1.png)
