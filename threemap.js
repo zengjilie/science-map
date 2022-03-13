@@ -1,92 +1,51 @@
-import * as THREE from 
-import { OrbitControls } from "map/OrbitControl";
+import * as THREE from './node_modules/three/build/three.module.js';
+import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls.js';
 
 //scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff);
-
-//camera
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 1000;
-camera.lookAt(0, 0, 0);
-
-// // points
-// let geo = new THREE.BufferGeometry();
-// const vertex = new THREE.Vector3(1, -10, 0);
-// const vertex2 = new THREE.Vector3(1, 10, 0);
-
-// let vertices = []
-
-// vertices.push(vertex);
-// vertices.push(vertex2);
-
-// geo.setAttribute('position', new THREE.Float32BufferAttribute(vertex, 2));
-
-// // material
-// const material = new THREE.PointsMaterial({ color: 0x888888 });
-// let point = new THREE.Points(geo, material);
-
-// //line
-// const points = []
-// points.push(new THREE.Vector3(-5, 0, 0))
-// points.push(new THREE.Vector3(5, 0, 0))
-// let geometry = new THREE.BufferGeometry().setFromPoints( points )
-// let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x888888 }))
-// console.log(line);
-// scene.add(line)
-
-
-
-// console.log(point);
-// scene.add(point);
-
-const vertices = [];
-
-for ( let i = 0; i < 10000; i ++ ) {
-
-	const x = THREE.MathUtils.randFloatSpread( 2000 );
-	const y = THREE.MathUtils.randFloatSpread( 2000 );
-	const z = THREE.MathUtils.randFloatSpread( 2000 );
-
-	vertices.push( x, y, z );
-
-}
-
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-
-const material = new THREE.PointsMaterial( { color: 0x888888 } );
-
-const points = new THREE.Points( geometry, material );
-
-scene.add( points );
-
-
+scene.background = new THREE.Color(0xcccccc);
 
 //renderer
-const renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector('#canvas')
-})
-
+const renderer = new THREE.WebGLRenderer({canvas:document.querySelector('#app')});
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.render(scene, camera);
+
+//camera
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+camera.position.set(0, 0, 1000);
 
 
+// controls
+const controls = new OrbitControls( camera, renderer.domElement );
+controls.listenToKeyEvents( window ); // optional
+//controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
 
-const controls = new OrbitControls(camera, rederer.domElement);
+controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+controls.dampingFactor = 0.05;
 
-//animation
-function animate() {
-    requestAnimationFrame(animate);
+controls.screenSpacePanning = false;
 
-    // cube.rotation.x += 0.01;
-    // cube.rotation.y += 0.01;
-    constroles.update();
+controls.minDistance = 100;
+controls.maxDistance = 500;
+
+controls.maxPolarAngle = Math.PI / 2;
+
+//objects
+const geometry = new THREE.SphereGeometry( 15, 32, 16 );
+const material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+const mesh = new THREE.Mesh(geometry, material);
+mesh.position.x = 50;
+mesh.position.y = 50;
+mesh.position.z = 50;
+
+scene.add(mesh);
+console.log(scene);
+//animate
+
+function animate(){
+    requestAnimationFrame( animate );
+    controls.update();
     renderer.render(scene, camera);
 }
 
-
 animate();
-
-
